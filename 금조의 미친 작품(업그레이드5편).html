@@ -1,0 +1,155 @@
+<!DOCTYPE html>  
+<html lang="ko">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>공학용 계산기</title>  
+    <style>  
+        body {  
+            font-family: Arial, sans-serif;  
+            background-color: #eef2f7;  
+            text-align: center;  
+            padding: 50px;  
+        }  
+        .calculator {  
+            background: white;  
+            padding: 30px;  
+            border-radius: 10px;  
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);  
+            display: inline-block;  
+            width: 400px;  
+        }  
+        select, input, button {  
+            margin: 10px 0;  
+            padding: 12px;  
+            width: 100%;  
+            border-radius: 5px;  
+            border: 1px solid #ccc;  
+            font-size: 16px;  
+            box-sizing: border-box;  
+        }  
+        input {  
+            text-align: right; /* 숫자 우측 정렬 */  
+        }  
+        button {  
+            background-color: #28a745;  
+            color: white;  
+            cursor: pointer;  
+            font-size: 18px;  
+            border: none;  
+        }  
+        button:hover {  
+            background-color: #218838;  
+        }  
+        h3 {  
+            color: #333;  
+            margin-top: 20px;  
+        }  
+        .result-container {  
+            background: #f8f9fa;  
+            padding: 15px;  
+            border-radius: 5px;  
+            margin-top: 15px;  
+            font-size: 20px;  
+            font-weight: bold;  
+            color: #007bff;  
+        }  
+        .advanced-buttons {  
+            display: grid;  
+            grid-template-columns: repeat(3, 1fr);  
+            gap: 10px;  
+        }  
+        .advanced-buttons button {  
+            padding: 15px;  
+            font-size: 16px;  
+        }  
+    </style>  
+</head>  
+<body>  
+    <h2>🧮 공학용 계산기</h2>  
+    <div class="calculator">  
+        <label for="operation">연산을 선택하세요:</label>  
+        <select id="operation">  
+            <option value="더하기">더하기 (+)</option>  
+            <option value="빼기">빼기 (-)</option>  
+            <option value="곱하기">곱하기 (×)</option>  
+            <option value="나누기">나누기 (÷)</option>  
+        </select>  
+        <br>  
+        <label for="num1">첫 번째 숫자:</label>  
+        <input type="text" id="num1" placeholder="숫자 입력">  
+        <br>  
+        <label for="num2">두 번째 숫자:</label>  
+        <input type="text" id="num2" placeholder="숫자 입력">  
+        <br>  
+        <button onclick="calculate()">일반 계산하기</button>  
+        <h3>📊 고급 기능</h3>  
+        <div class="advanced-buttons">  
+            <button onclick="calculateAdvanced('square')">x² (제곱)</button>  
+            <button onclick="calculateAdvanced('sqrt')">√x (제곱근)</button>  
+            <button onclick="calculateAdvanced('reciprocal')">1/x (역수)</button>  
+            <button onclick="calculateAdvanced('sin')">sin(x)</button>  
+            <button onclick="calculateAdvanced('cos')">cos(x)</button>  
+            <button onclick="calculateAdvanced('tan')">tan(x)</button>  
+        </div>  
+        <div class="result-container">결과: <span id="result">-</span></div>  
+    </div>  
+
+    <script>  
+        function getNumber(elId) {  
+            const value = document.getElementById(elId).value;  
+            return parseFloat(value) || 0;  
+        }  
+
+        function calculate() {  
+            const num1 = getNumber("num1");  
+            const num2 = getNumber("num2");  
+            const operation = document.getElementById("operation").value;  
+            let result;  
+
+            if (operation === "더하기") {  
+                result = num1 + num2;  
+            } else if (operation === "빼기") {  
+                result = num1 - num2;  
+            } else if (operation === "곱하기") {  
+                result = num1 * num2;  
+            } else if (operation === "나누기") {  
+                if (num2 === 0) {  
+                    result = "오류: 0으로 나눌 수 없습니다.";  
+                } else {  
+                    result = (num1 / num2).toFixed(2);  
+                }  
+            } else {  
+                result = "올바른 연산을 선택하세요.";  
+            }  
+
+            document.getElementById("result").innerText = isNaN(result) ? "오류: 계산 실패" : result;  
+        }  
+
+        function calculateAdvanced(type) {  
+            const num1 = getNumber("num1");  
+            let result;  
+
+            if (type === "square") {  
+                result = Math.pow(num1, 2);  
+            } else if (type === "sqrt") {  
+                result = num1 >= 0 ? Math.sqrt(num1).toFixed(5) : "오류: 음수의 제곱근은 계산할 수 없습니다.";  
+            } else if (type === "reciprocal") {  
+                result = num1 !== 0 ? (1 / num1).toFixed(5) : "오류: 0의 역수는 존재하지 않습니다.";  
+            } else if (type === "sin") {  
+                result = Math.sin((num1 * Math.PI) / 180).toFixed(5);  // 각도를 라디안으로 변환  
+            } else if (type === "cos") {  
+                result = Math.cos((num1 * Math.PI) / 180).toFixed(5);  
+            } else if (type === "tan") {  
+                if (Math.cos((num1 * Math.PI) / 180) === 0) {  
+                    result = "오류: tan 값은 무한대입니다.";  
+                } else {  
+                    result = Math.tan((num1 * Math.PI) / 180).toFixed(5);  
+                }  
+            }  
+
+            document.getElementById("result").innerText = isNaN(result) ? "오류: 계산 실패" : result;  
+        }  
+    </script>  
+</body>  
+</html>
